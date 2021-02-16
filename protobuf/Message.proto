@@ -1,0 +1,65 @@
+// 登录消息
+// .\protoc.exe --java_out=..\src\main\java .\Message.proto
+syntax = "proto2";
+option java_package = "io.tooi.tcp.gateway.message";
+option java_outer_classname = "ProtoMsg";
+
+enum MessageType{
+    LOGIN_REQ = 1;//登录请求
+    LOGIN_RSP = 2;//登录响应
+    REPORT_REQ = 3;//数据上报请求
+    REPORT_RSP = 4;//数据上报响应
+    NOTIFICATION = 5;//通知消息
+}
+
+message LoginRequest{
+    required string sn = 1; // 设备序列号
+    required string token = 2; // 登录token
+}
+
+message LoginResponse{
+    required bool result = 1; //true表示成功，false表示失败
+    required uint64 time_stamp = 2; // 时间戳
+}
+
+message ReportRequest{
+    required string sn = 1; // 设备序列号
+    required int32 battery = 2; // 电池电量
+    required double humidity = 3; // 湿度
+    required double liquid = 4; // 水位
+    required double temperature = 5; // 温度
+    required uint64 time_stamp = 6; // 时间戳
+    required int32 lbs = 7; // LBS信号强度
+}
+
+message ReportResponse {
+    required bool result = 1; //true表示成功，false表示失败
+    required uint64 time_stamp = 2; // 时间戳
+}
+
+enum Notification_type{
+    CONNECT_FINISHED = 1; // 节点连接成功
+    SESSION_ON = 2;// 客户端上线通知
+    SESSION_OFF = 3;// 客户端下线通知
+
+}
+
+message Notification{
+ required Notification_type type = 1; // 通知类型
+ required string json = 2; // 数据
+ required uint64 time_stamp = 3; // 时间戳
+}
+
+message Message{
+    required MessageType type = 1; // 消息类型
+    required string message_id = 2; // 消息序列号
+    required string session_id = 3; // 会话ID
+    optional LoginRequest loginRequest = 4;
+    optional LoginResponse loginResponse = 5;
+    optional ReportRequest reportRequest = 6;
+    optional ReportResponse reportResponse = 7;
+    optional Notification notification = 8;
+}
+
+
+
